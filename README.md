@@ -40,4 +40,7 @@ npm run lint
 npm run build
 ```
 
+With the development server running and demo data seeded, `npm run smoke`
+checks both roles and the main read flows against the live API.
+
 Completed workout sessions intentionally have no update or delete route.

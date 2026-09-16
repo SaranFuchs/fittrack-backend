@@ -51,7 +51,7 @@ export async function updateNutritionEntry(clientId, entryId, input) {
   const entry = await NutritionEntry.findOneAndUpdate(
     { _id: entryId, clientId },
     { $set: input },
-    { new: true, runValidators: true },
+    { returnDocument: "after", runValidators: true },
   );
   if (!entry) throw new ApiError(404, "NUTRITION_ENTRY_NOT_FOUND", "Nutrition entry not found.");
   return entry;

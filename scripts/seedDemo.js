@@ -65,7 +65,7 @@ async function main() {
   const trainer = await User.findOneAndUpdate(
     { email: trainerEmail },
     { $set: { name: process.env.TRAINER_SEED_NAME || "Demo Trainer", passwordHash: await bcrypt.hash(trainerPassword, 12), role: "trainer", trainerId: null } },
-    { new: true, upsert: true, setDefaultsOnInsert: true },
+    { returnDocument: "after", upsert: true, setDefaultsOnInsert: true },
   );
 
   const clientPasswordHash = await bcrypt.hash("ClientDemo!2026", 12);

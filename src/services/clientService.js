@@ -150,7 +150,7 @@ export async function updateNutritionTarget(clientId, target) {
   const profile = await ClientProfile.findOneAndUpdate(
     { clientId },
     { $set: { nutritionTarget: target } },
-    { new: true, runValidators: true },
+    { returnDocument: "after", runValidators: true },
   ).lean();
   if (!profile) throw new ApiError(404, "CLIENT_NOT_FOUND", "Client profile not found.");
   return profile.nutritionTarget;

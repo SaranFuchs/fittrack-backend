@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
+    "smoke": "node scripts/smokeApi.js",
     "setup:local": "node scripts/setupLocalEnv.js",
     "create-trainer": "node scripts/createTrainer.js",
     "seed": "node scripts/seedDemo.js"

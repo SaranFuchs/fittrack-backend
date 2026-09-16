@@ -26,6 +26,14 @@ describe("workout cycle", () => {
     const sessions = [1, 2, 3].map((day) => ({ planRevision: 2, cycleNumber: 1, workoutDayNumber: day }));
     expect(calculateWorkoutCycle(plan, sessions)).toMatchObject({ cycleNumber: 2, nextSuggestedDayNumber: 1 });
   });
+
+  it("works for every supported plan length", () => {
+    for (let length = 1; length <= 7; length += 1) {
+      const dynamicPlan = { revision: 1, days: Array.from({ length }, (_, index) => ({ dayNumber: index + 1 })) };
+      expect(calculateWorkoutCycle(dynamicPlan, []).days).toHaveLength(length);
+      expect(calculateWorkoutCycle(dynamicPlan, []).nextSuggestedDayNumber).toBe(1);
+    }
+  });
 });
 
 describe("progression", () => {
