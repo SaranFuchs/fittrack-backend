@@ -14,11 +14,14 @@ const userSchema = new mongoose.Schema({
   name: String, email: { type: String, unique: true }, passwordHash: String, role: String, trainerId: mongoose.Schema.Types.ObjectId,
 }, { timestamps: true });
 const exerciseSchema = new mongoose.Schema({ name: String, targetSets: Number, targetReps: Number, suggestedWeightKg: Number, notes: String });
+const workoutDaySchema = new mongoose.Schema({
+  dayNumber: Number, name: String, exercises: [exerciseSchema],
+}, { _id: false });
 const profileSchema = new mongoose.Schema({
   clientId: { type: mongoose.Schema.Types.ObjectId, unique: true },
   fitnessProfile: mongoose.Schema.Types.Mixed,
   nutritionTarget: mongoose.Schema.Types.Mixed,
-  workoutPlan: { revision: Number, days: [{ dayNumber: Number, name: String, exercises: [exerciseSchema] }] },
+  workoutPlan: { revision: Number, days: [workoutDaySchema] },
 }, { timestamps: true });
 const workoutSchema = new mongoose.Schema({
   clientId: mongoose.Schema.Types.ObjectId, recordedByUserId: mongoose.Schema.Types.ObjectId,

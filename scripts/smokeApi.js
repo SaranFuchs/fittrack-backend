@@ -1,3 +1,7 @@
+const { loadEnvConfig } = require("@next/env");
+
+loadEnvConfig(process.cwd());
+
 const baseUrl = process.env.API_BASE_URL || "http://localhost:3000/api";
 
 async function request(path, options = {}) {
@@ -18,7 +22,10 @@ async function login(email, password) {
 async function main() {
   const health = await request("/health");
   if (health.status !== "ok") throw new Error("Health endpoint is not ready.");
-  const trainer = await login("demo.trainer@fittrack.local", "FitTrackDemo!2026");
+  const trainer = await login(
+    process.env.TRAINER_SEED_EMAIL || "demo.trainer@fittrack.local",
+    process.env.TRAINER_SEED_PASSWORD || "FitTrackDemo!2026",
+  );
   const trainerHeaders = { Authorization: `Bearer ${trainer.token}` };
   const clients = await request("/clients", { headers: trainerHeaders });
   if (clients.length !== 2) throw new Error(`Expected 2 seeded clients, found ${clients.length}.`);

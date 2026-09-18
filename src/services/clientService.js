@@ -95,8 +95,23 @@ export async function deleteClient(clientId) {
 export async function getWorkoutPlanState(clientId) {
   const profile = await ClientProfile.findOne({ clientId }).lean();
   if (!profile) throw new ApiError(404, "CLIENT_NOT_FOUND", "Client profile not found.");
-  const sessions = await WorkoutSession.find({ clientId, planRevision: profile.workoutPlan.revision }).lean();
-  const cycle = calculateWorkoutCycle(profile.workoutPlan, sessions);
+  const plan = {
+    revision: profile.workoutPlan.revision,
+    days: profile.workoutPlan.days.map((day) => ({
+      dayNumber: day.dayNumber,
+      name: day.name,
+      exercises: day.exercises.map((exercise) => ({
+        _id: exercise._id,
+        name: exercise.name,
+        targetSets: exercise.targetSets,
+        targetReps: exercise.targetReps,
+        suggestedWeightKg: exercise.suggestedWeightKg,
+        notes: exercise.notes,
+      })),
+    })),
+  };
+  const sessions = await WorkoutSession.find({ clientId, planRevision: plan.revision }).lean();
+  const cycle = calculateWorkoutCycle(plan, sessions);
 
   const latestProgression = {};
   [...sessions]
@@ -108,7 +123,7 @@ export async function getWorkoutPlanState(clientId) {
       });
     });
 
-  return { plan: profile.workoutPlan, cycle, latestProgression };
+  return { plan, cycle, latestProgression };
 }
 
 export async function updateWorkoutPlan(clientId, input) {
