@@ -43,9 +43,5 @@ const workoutSessionSchema = new mongoose.Schema(
 workoutSessionSchema.index({ clientId: 1, createdAt: -1 });
 workoutSessionSchema.index({ clientId: 1, planRevision: 1, cycleNumber: 1 });
 workoutSessionSchema.index({ clientId: 1, completedDate: 1 });
-workoutSessionSchema.index(
-  { clientId: 1, planRevision: 1, cycleNumber: 1, workoutDayNumber: 1 },
-  { unique: true },
-);
 
 export default mongoose.models.WorkoutSession || mongoose.model("WorkoutSession", workoutSessionSchema);

@@ -18,10 +18,6 @@ export async function createWorkout({ clientId, recordedByUserId, input }) {
 
   const priorSessions = await WorkoutSession.find({ clientId, planRevision: plan.revision }).lean();
   const cycle = calculateWorkoutCycle(plainPlan, priorSessions);
-  const dayStatus = cycle.days.find((day) => day.dayNumber === input.workoutDayNumber)?.status;
-  if (dayStatus === "COMPLETED") {
-    throw new ApiError(409, "WORKOUT_DAY_ALREADY_COMPLETED", "This workout day is already complete in the current cycle.");
-  }
 
   const submittedById = new Map(input.exercises.map((exercise) => [exercise.planExerciseId, exercise]));
   if (submittedById.size !== workoutDay.exercises.length) {
@@ -47,24 +43,16 @@ export async function createWorkout({ clientId, recordedByUserId, input }) {
     };
   });
 
-  let session;
-  try {
-    session = await WorkoutSession.create({
-      clientId,
-      recordedByUserId,
-      completedDate: input.completedDate,
-      workoutDayNumber: workoutDay.dayNumber,
-      workoutDayName: workoutDay.name,
-      planRevision: plan.revision,
-      cycleNumber: cycle.cycleNumber,
-      exercises,
-    });
-  } catch (error) {
-    if (error?.code === 11000) {
-      throw new ApiError(409, "WORKOUT_DAY_ALREADY_COMPLETED", "This workout day is already complete in the current cycle.");
-    }
-    throw error;
-  }
+  const session = await WorkoutSession.create({
+    clientId,
+    recordedByUserId,
+    completedDate: input.completedDate,
+    workoutDayNumber: workoutDay.dayNumber,
+    workoutDayName: workoutDay.name,
+    planRevision: plan.revision,
+    cycleNumber: cycle.cycleNumber,
+    exercises,
+  });
 
   const saved = session.toObject();
   return {

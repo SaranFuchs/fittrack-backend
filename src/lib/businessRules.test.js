@@ -27,6 +27,19 @@ describe("workout cycle", () => {
     expect(calculateWorkoutCycle(plan, sessions)).toMatchObject({ cycleNumber: 2, nextSuggestedDayNumber: 1 });
   });
 
+  it("counts repeated workout days once and keeps the next unique day suggested", () => {
+    const cycle = calculateWorkoutCycle(plan, [
+      { planRevision: 2, cycleNumber: 1, workoutDayNumber: 1 },
+      { planRevision: 2, cycleNumber: 1, workoutDayNumber: 1 },
+      { planRevision: 2, cycleNumber: 1, workoutDayNumber: 1 },
+    ]);
+    expect(cycle).toMatchObject({
+      cycleNumber: 1,
+      completedCount: 1,
+      nextSuggestedDayNumber: 2,
+    });
+  });
+
   it("works for every supported plan length", () => {
     for (let length = 1; length <= 7; length += 1) {
       const dynamicPlan = { revision: 1, days: Array.from({ length }, (_, index) => ({ dayNumber: index + 1 })) };
