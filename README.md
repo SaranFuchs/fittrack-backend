@@ -14,8 +14,8 @@ npm run seed
 npm run dev
 ```
 
-The API runs at `http://localhost:3000`; health is available at
-`http://localhost:3000/api/health`. `setup:local` reads
+The API runs at `http://localhost:3000/backend`; health is available at
+`http://localhost:3000/backend/api/health`. `setup:local` reads
 `../atlas-credentials.env`, writes an ignored `.env.local`, and preserves an
 existing local JWT secret when rerun.
 

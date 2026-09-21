@@ -2,7 +2,7 @@ const { loadEnvConfig } = require("@next/env");
 
 loadEnvConfig(process.cwd());
 
-const baseUrl = process.env.API_BASE_URL || "http://localhost:3000/api";
+const baseUrl = process.env.API_BASE_URL || "http://localhost:3000/backend/api";
 
 async function request(path, options = {}) {
   const response = await fetch(`${baseUrl}${path}`, options);
